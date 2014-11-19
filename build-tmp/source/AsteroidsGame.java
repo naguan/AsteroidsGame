@@ -16,15 +16,26 @@ public class AsteroidsGame extends PApplet {
 
 private SpaceShip steve;
 private Stars[] joe;
+private ArrayList<Asteroid> larry;
+private boolean wPress = false;
+private boolean aPress = false;
+private boolean sPress = false;
+private boolean dPress = false;
+
 public void setup() 
 {
   background(0);
   size(700, 700);
-  steve = new SpaceShip(250, 250);
-  joe = new Stars[(int)(Math.random()*300)];
+  steve = new SpaceShip(350, 350);
+  joe = new Stars[(int)(Math.random()*200)+100];
+  larry = new ArrayList<Asteroid>();
   for ( int i = 0; i<joe.length; i++)
   {
     joe[i] = new Stars((int)(Math.random()*700), (int)(Math.random()*700));
+  }
+  for ( int i = 0; i<5; i++)
+  {
+    larry.add(i,new Asteroid());
   }
 }
 public void draw() 
@@ -33,6 +44,15 @@ public void draw()
   for (int i = 0; i<joe.length; i++)
   {
     joe[i].show();
+  }
+  for (int i = 0; i<larry.size(); i++)
+  {
+    larry.get(i).show();
+    larry.get(i).move();
+        if( dist(larry.get(i).getX(), larry.get(i).getY(), steve.getX(), steve.getY()) < 20)
+        {
+          larry.remove(i);
+        }
   }
   steve.show();
   steve.move();
@@ -55,20 +75,138 @@ public void draw()
       steve.accelerate(-0.1f);
     }
   }
+  if (wPress == true && dPress == true)
+  {
+    steve.rotate(2);
+    steve.accelerate(0.05f);
+  }
+  if (wPress == true && aPress == true)
+  {
+    steve.rotate(-2);
+    steve.accelerate(0.05f);
+  }
+  if (sPress == true && dPress == true)
+  {
+    steve.rotate(2);
+    steve.accelerate(-0.05f);
+  }
+  if (sPress == true && aPress == true)
+  {
+    steve.rotate(-2);
+    steve.accelerate(-0.05f);
+  }
 }  
-    public void keyPressed() {
-      if (key == 'z')
-      {
+public void keyPressed() {
+  if (key == 'z')
+  {
+    steve.setX((int)(Math.random()*500)); 
+    steve.setY((int)(Math.random()*500));
+    steve.setPointDirection((int)(Math.random()*360));
+    steve.setDirectionX(0);
+    steve.setDirectionY(0);
+  }
+  if (key=='w')
+  {
+    wPress = true;
+  } else if (key == 'a')
+  {
+    aPress = true;
+  } else if (key == 's')
+  {
+    sPress = true;
+  } else if(key == 'd')
+  {
+    dPress = true;
+  }
+  if (key == 'm')
+  {
+    larry.add(new Asteroid());
+  }
+}
+public void keyReleased()
+{
+  if (key=='w')
+  {
+    wPress = false;
+  } 
+  else if (key == 'a')
+  {
+    aPress = false;
+  } 
+  else if (key == 's')
+  {
+    sPress = false;
+  } 
+  else if(key == 'd')
+  {
+    dPress = false;
+  }
+}
+class Asteroid extends Floater
+{
+  private int rotSpd;
+  public Asteroid()
+  {
+    rotSpd = 5;
+    corners = 6;
+    xCorners = new int[corners];
+    yCorners = new int[corners];
+    xCorners[0]=18;
+    yCorners[0]=0;
+    xCorners[1]=12;
+    yCorners[1]=12;
+    xCorners[2]=-6;
+    yCorners[2]=12;
+    xCorners[3]=-18;
+    yCorners[3]=0;
+    xCorners[4]=-6;
+    yCorners[4]=-12;
+    xCorners[5]=18;
+    yCorners[5]=-12;
+    myColor = 175;
+    myCenterX=(int)(Math.random()*700);
+    myCenterY=(int)(Math.random()*700);
+    myDirectionX=(int)(Math.random()*4)-2;
+    myDirectionY=(int)(Math.random()*4)-2;
+    myPointDirection=(int)(Math.random()*360);
+  }
+  public void move()
+  {
+    rotate(rotSpd);
+    super.move();
 
-        steve.setX((int)(Math.random()*500)); 
-        steve.setY((int)(Math.random()*500));
-        steve.setPointDirection((int)(Math.random()*360));
-        steve.setDirectionX(0);
-        steve.setDirectionY(0);
-      }
-    }
-  
-
+  }
+  public void setX(int x) {
+    myCenterX = x;
+  }
+  public int getX() {
+    return (int)myCenterX;
+  }
+  public void setY(int y) {
+    myCenterY = y;
+  }
+  public int getY() {
+    return (int)myCenterY;
+  }
+  public void setDirectionX(double x) {
+    myDirectionX = x;
+  }
+  public double getDirectionX() {
+    return (int)myDirectionX;
+  }
+  public void setDirectionY(double y) {
+    myDirectionY = y;
+  }
+  public double getDirectionY() {
+    return (int)myDirectionY;
+  }
+  public void setPointDirection(int degrees) {
+    myPointDirection = degrees;
+  }
+  public double getPointDirection() {
+    return (int)myPointDirection;
+  }
+}
 class Stars 
 {
   private int myX, myY;
