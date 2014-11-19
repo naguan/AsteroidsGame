@@ -33,7 +33,7 @@ public void draw()
   {
     larry.get(i).show();
     larry.get(i).move();
-        if( dist(larry.get(i).getX(), larry.get(i).getY(), steve.getX(), steve.getY()) < 0)
+        if( dist(larry.get(i).getX(), larry.get(i).getY(), steve.getX(), steve.getY()) < 20)
         {
           larry.remove(i);
         }
